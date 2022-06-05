@@ -14,7 +14,8 @@ export default class AuthTokenUseCases {
 
     public async generateToken(): Promise<string> {
 
-        const token = encode(v4());
+        const prefix = Math.floor(Math.random() * 1000) % 2 == 0 ? 'read' : 'write';
+        const token = prefix + '-' + encode(v4());
         this.repo.create(token);
 
         return token;

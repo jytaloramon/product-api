@@ -123,7 +123,9 @@ export default class ProductUseCases {
         if (!product)
             throw new NotFoundError('Produto não existe');
 
-        if (this.repo.getByCode(params.code)?.id !== product.id)
+        const productTemp = this.repo.getByCode(params.code);
+
+        if (productTemp && productTemp.id !== product.id)
             throw new ConflitError('Código já existente');
 
         this.repo.delete(product.id);

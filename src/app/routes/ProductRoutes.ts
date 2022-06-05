@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import ProductCtrl from "../controllers/ProductCtrl";
 import authMw from '../middlewares/auth/AuthMw';
+import AuthPermissionMw from "../middlewares/auth/AuthPermissionMw";
 
 export class ProductRoutes {
 
@@ -11,14 +12,14 @@ export class ProductRoutes {
 
         this.routes = Router();
 
-        this.routes.options('/', ProductCtrl.getOption);
-        this.routes.head('/', ProductCtrl.getHead);
+        this.routes.options('/', [authMw], ProductCtrl.getOption);
+        this.routes.head('/', [authMw], ProductCtrl.getHead);
         this.routes.get('/', [authMw], ProductCtrl.getAll);
         this.routes.get('/:id', [authMw], ProductCtrl.getById);
-        this.routes.post('/', [authMw], ProductCtrl.create);
-        this.routes.patch('/:id', [authMw], ProductCtrl.update);
-        this.routes.put('/:id', [authMw], ProductCtrl.updateFull);
-        this.routes.delete('/:id', [authMw], ProductCtrl.delete);
+        this.routes.post('/', [authMw, AuthPermissionMw.permWrite], ProductCtrl.create);
+        this.routes.patch('/:id', [authMw, AuthPermissionMw.permWrite], ProductCtrl.update);
+        this.routes.put('/:id', [authMw, AuthPermissionMw.permWrite], ProductCtrl.updateFull);
+        this.routes.delete('/:id', [authMw, AuthPermissionMw.permWrite], ProductCtrl.delete);
     }
 
     public getRoutes(): Router {
