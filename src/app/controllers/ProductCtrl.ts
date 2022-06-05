@@ -127,9 +127,14 @@ export default class ProductCtrl {
 
         try {
             if (await ProductCtrl.useCase.getProductById(productData.id)) {
+<<<<<<< HEAD
                 await ProductCtrl.useCase.updateFullProduct(productData);
                 
                 return res.status(HttpSCode.NO_CONTENT).end();
+=======
+                return res.status(HttpSCode.NO_CONTENT)
+                    .json(await ProductCtrl.useCase.updateFullProduct(productData));
+>>>>>>> origin/main
             }
 
             productData.id = productData.newId;

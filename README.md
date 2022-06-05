@@ -32,10 +32,11 @@ Obs.: Os frameworks web SpringBoot e NestJS (Node.js) são ótimas opções para
    - Exemplo: **#** *docker run -it -p 8546:8546 -v /Dev/product-api:/app 38bbc0febaf2 /bin/bash*
 
 3. **#** *sudo -s -u node*
+4. **#** *cd app/*
 
 ### Rodando o Projeto
 *[Na pasta do projeto, execute]*
 1. **#** *npm install*
 2. **#** *npm run dev*
 
-
+https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
