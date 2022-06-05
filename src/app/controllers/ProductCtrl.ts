@@ -100,7 +100,7 @@ export default class ProductCtrl {
         };
 
         try {
-            return res.status(HttpSCode.OK)
+            return res.status(HttpSCode.NO_CONTENT)
                 .json(await ProductCtrl.useCase.updateProduct(productData));
         } catch (error) {
             if (error instanceof AttributeInvalidError) {
@@ -126,7 +126,7 @@ export default class ProductCtrl {
 
         try {
             if (await ProductCtrl.useCase.getProductById(productData.id)) {
-                return res.status(HttpSCode.OK)
+                return res.status(HttpSCode.NO_CONTENT)
                     .json(await ProductCtrl.useCase.updateFullProduct(productData));
             }
 
@@ -151,8 +151,7 @@ export default class ProductCtrl {
                 id: Number.parseInt(req.params.id),
             });
 
-            return res.status(HttpSCode.OK)
-                .json({ msg: 'Item removido!' });
+            return res.status(HttpSCode.NO_CONTENT).end();
         } catch (error) {
             if (error instanceof AttributeInvalidError) {
                 return res.status(HttpSCode.BAD_REQUEST)
