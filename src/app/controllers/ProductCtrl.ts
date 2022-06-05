@@ -83,8 +83,9 @@ export default class ProductCtrl {
         };
 
         try {
-            return res.status(HttpSCode.CREATED)
-                .json(await ProductCtrl.useCase.createProduct(productData));
+            await ProductCtrl.useCase.createProduct(productData);
+
+            return res.status(HttpSCode.CREATED).end();
         } catch (error) {
             return res.status(HttpSCode.CONFLICT)
                 .json({ msg: (error as Error).message });
@@ -100,7 +101,7 @@ export default class ProductCtrl {
         };
 
         try {
-            return res.status(HttpSCode.OK)
+            return res.status(HttpSCode.NO_CONTENT)
                 .json(await ProductCtrl.useCase.updateProduct(productData));
         } catch (error) {
             if (error instanceof AttributeInvalidError) {
@@ -126,8 +127,9 @@ export default class ProductCtrl {
 
         try {
             if (await ProductCtrl.useCase.getProductById(productData.id)) {
-                return res.status(HttpSCode.OK)
-                    .json(await ProductCtrl.useCase.updateFullProduct(productData));
+                await ProductCtrl.useCase.updateFullProduct(productData);
+                
+                return res.status(HttpSCode.NO_CONTENT).end();
             }
 
             productData.id = productData.newId;
@@ -151,8 +153,7 @@ export default class ProductCtrl {
                 id: Number.parseInt(req.params.id),
             });
 
-            return res.status(HttpSCode.OK)
-                .json({ msg: 'Item removido!' });
+            return res.status(HttpSCode.NO_CONTENT).end();
         } catch (error) {
             if (error instanceof AttributeInvalidError) {
                 return res.status(HttpSCode.BAD_REQUEST)
