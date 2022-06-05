@@ -101,8 +101,9 @@ export default class ProductCtrl {
         };
 
         try {
-            return res.status(HttpSCode.NO_CONTENT)
-                .json(await ProductCtrl.useCase.updateProduct(productData));
+            await ProductCtrl.useCase.updateProduct(productData)
+
+            return res.status(HttpSCode.NO_CONTENT).end();
         } catch (error) {
             if (error instanceof AttributeInvalidError) {
                 return res.status(HttpSCode.BAD_REQUEST)
@@ -127,14 +128,9 @@ export default class ProductCtrl {
 
         try {
             if (await ProductCtrl.useCase.getProductById(productData.id)) {
-<<<<<<< HEAD
                 await ProductCtrl.useCase.updateFullProduct(productData);
                 
                 return res.status(HttpSCode.NO_CONTENT).end();
-=======
-                return res.status(HttpSCode.NO_CONTENT)
-                    .json(await ProductCtrl.useCase.updateFullProduct(productData));
->>>>>>> origin/main
             }
 
             productData.id = productData.newId;
