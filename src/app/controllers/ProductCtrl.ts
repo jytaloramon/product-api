@@ -13,10 +13,13 @@ export default class ProductCtrl {
 
         res.header(
             'Access-Control-Request-Method',
-            'OPTION,GET,POST,PATCH,PUT,DELETE,TRACE,HEAD')
+            'OPTION,GET,POST,PATCH,PUT,DELETE,HEAD')
             .header(
                 'Access-Control-Allow-Origin',
                 '*'
+            ).header(
+                'Access-Control-Allow-Headers',
+                'Content-Type, Content-Length, Authorization'
             );
 
 
@@ -27,14 +30,7 @@ export default class ProductCtrl {
 
         const lastUpdate = await ProductCtrl.useCase.getLastUpdate();
 
-        const lastModifies = '' + DAY[lastUpdate.getDay() + 1] + ', '
-            + (lastUpdate.getDate() > 9 ? lastUpdate.getDate() : '0' + lastUpdate.getDate())
-            + ' ' + MONTH[lastUpdate.getMonth() + 1]
-            + ' ' + lastUpdate.getFullYear()
-            + ' ' + (lastUpdate.getHours() + 3 > 9 ? lastUpdate.getHours() + 3 : '0' + (lastUpdate.getHours() + 3))
-            + ':' + (lastUpdate.getMinutes() > 9 ? lastUpdate.getMinutes() : '0' + lastUpdate.getMinutes())
-            + ':' + (lastUpdate.getSeconds() > 9 ? lastUpdate.getSeconds() : '0' + lastUpdate.getSeconds())
-            + ' GMT';
+        const lastModifies = ProductCtrl.lastModifiedFormat(lastUpdate);
 
         const products = await ProductCtrl.useCase.getAllProducts();
         const length = JSON.stringify(products).length;
@@ -51,6 +47,15 @@ export default class ProductCtrl {
     }
 
     public static async getAll(req: Request, res: Response): Promise<Response> {
+
+        const lastUpdate = await ProductCtrl.useCase.getLastUpdate();
+
+        const lastModifies = ProductCtrl.lastModifiedFormat(lastUpdate);
+
+        res.header(
+            'Last-Modified',
+            lastModifies
+        );
 
         return res.status(HttpSCode.OK)
             .json(await ProductCtrl.useCase.getAllProducts());
@@ -83,9 +88,9 @@ export default class ProductCtrl {
         };
 
         try {
-            await ProductCtrl.useCase.createProduct(productData);
+            const product = await ProductCtrl.useCase.createProduct(productData);
 
-            return res.status(HttpSCode.CREATED).end();
+            return res.status(HttpSCode.CREATED).json(product);
         } catch (error) {
             return res.status(HttpSCode.CONFLICT)
                 .json({ msg: (error as Error).message });
@@ -129,7 +134,7 @@ export default class ProductCtrl {
         try {
             if (await ProductCtrl.useCase.getProductById(productData.id)) {
                 await ProductCtrl.useCase.updateFullProduct(productData);
-                
+
                 return res.status(HttpSCode.NO_CONTENT).end();
             }
 
@@ -166,5 +171,15 @@ export default class ProductCtrl {
         }
     }
 
+    public static lastModifiedFormat(lastUpdate: Date) {
+        return '' + DAY[lastUpdate.getDay() + 1] + ', '
+            + (lastUpdate.getDate() > 9 ? lastUpdate.getDate() : '0' + lastUpdate.getDate())
+            + ' ' + MONTH[lastUpdate.getMonth() + 1]
+            + ' ' + lastUpdate.getFullYear()
+            + ' ' + (lastUpdate.getHours() + 3 > 9 ? lastUpdate.getHours() + 3 : '0' + (lastUpdate.getHours() + 3))
+            + ':' + (lastUpdate.getMinutes() > 9 ? lastUpdate.getMinutes() : '0' + lastUpdate.getMinutes())
+            + ':' + (lastUpdate.getSeconds() > 9 ? lastUpdate.getSeconds() : '0' + lastUpdate.getSeconds())
+            + ' GMT';
+    }
 
 }
