@@ -54,7 +54,7 @@ export default class ProductUseCases {
         return this.createFullProduct({
             id: generateId(),
             code: params.code,
-            name: params.length,
+            name: params.name,
             length: params.length,
             producer: params.producer,
         });

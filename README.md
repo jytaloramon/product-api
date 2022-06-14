@@ -124,6 +124,3 @@ https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
   - No content 204
 - Executar com id inválido
   - Not Found
-
-write-YjlkOGMwZDItNTE4Yy00ZGQ4LWFlY2QtYWIzMTY2Y2ZkMTM0
-read-MGI3NmQ2NGMtNjM0Yi00Y2ZmLWJiNzMtODAzZjZjYjdjNTVh
